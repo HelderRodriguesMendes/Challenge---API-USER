@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -68,9 +69,18 @@ public class UserServiceRequest {
             if(dateCurrent.equals(lastImport) || dateCurrent.isAfter(lastImport)){
                 request.importUsers();
             }
-        }else{
+        }else if(checkFirstImport()){
             request.importUsers();
         }
+    }
+
+    public boolean checkFirstImport(){
+        boolean ok = false;
+        LocalTime hourCurrent = configImport.getLocalTimeCurrent();
+        LocalTime hourNewImport = LocalTime.of(23, 40);
+
+        if(hourCurrent.isAfter(hourNewImport)) ok = true;
+        return ok;
     }
 
     public LocalDateTime getLastImport(){
