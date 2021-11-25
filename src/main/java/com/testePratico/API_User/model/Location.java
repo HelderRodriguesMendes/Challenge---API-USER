@@ -17,16 +17,16 @@ public class Location implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idLocation;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Street street;
     private String city;
     private String state;
     private String country;
     private String postcode;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Coordinates coordinates;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Timezone timezone;
 }

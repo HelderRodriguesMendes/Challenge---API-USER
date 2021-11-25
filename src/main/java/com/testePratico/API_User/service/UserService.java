@@ -4,9 +4,11 @@ import com.testePratico.API_User.model.User;
 import com.testePratico.API_User.repository.UserRepository;
 import com.testePratico.API_User.service.exceptions.ObjectNotFoundExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -14,69 +16,31 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private LoginService loginService;
-
-    @Autowired
-    private NameService nameService;
-
-    @Autowired
-    private LocationService locationService;
-
-    @Autowired
-    private DobService dobService;
-
-    @Autowired
-    private RegisteredService registeredService;
-
-    @Autowired
-    private IdEntityService idEntityService;
-
-    @Autowired
-    private PictureService pictureService;
-
-    public void save(User user){
-
-        if(user.getName() != null){
-            user.setName(nameService.save(user.getName()));
-        }
-
-        if(user.getLocation() != null){
-            user.setLocation(locationService.save(user.getLocation()));
-        }
-
-        if(user.getLogin() != null){
-            user.setLogin(loginService.save(user.getLogin()));
-        }
-
-        if(user.getDob() != null){
-            user.setDob(dobService.save(user.getDob()));
-        }
-
-        if(user.getRegistered() != null){
-            user.setRegistered(registeredService.save(user.getRegistered()));
-        }
-
-        if(user.getIdEntity() != null){
-            user.setIdEntity(idEntityService.save(user.getIdEntity()));
-        }
-
-        if(user.getPicture() != null){
-            user.setPicture(pictureService.save(user.getPicture()));
-        }
-        userRepository.save(user);
+    public User save(User user){
+        return userRepository.save(user);
     }
 
-    public List<User> getAll (){
-        return userRepository.getAllUsersPublished();
+    public Page<User> getAll (Pageable pageable){
+        return userRepository.getAllUsersPublished(pageable);
+    }
+
+    public void deleteAll(){
+        userRepository.deleteAll();
     }
 
     public void deleteById(Long id){
-        userRepository.deleteById(id);
+        userRepository.delete(id);
     }
 
-    public User getById(Long userId){
-        return userRepository.findById(userId).orElseThrow(() ->
+    public User getUserId(Long userId){
+        return userRepository.getUserId(userId).orElseThrow(() ->
                 new ObjectNotFoundExceptions("Usuario não encontrado"));
+    }
+
+    public User checkDatabaseNull(){
+        Optional<User> optionalUser = userRepository.checkDatabaseNull();
+        if(optionalUser.isPresent()){
+            return optionalUser.get();
+        }else return null;
     }
 }

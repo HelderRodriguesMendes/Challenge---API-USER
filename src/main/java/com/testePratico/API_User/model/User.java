@@ -21,28 +21,28 @@ public class User implements Serializable {
 
     private String gender;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Name name;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Location location;
     private String email;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Login login;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     private Dob dob;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Registered registered;
     private String phone;
     private String cell;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private IdEntity idEntity;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Picture picture;
     private String nat;
     private LocalDateTime imported_t;
