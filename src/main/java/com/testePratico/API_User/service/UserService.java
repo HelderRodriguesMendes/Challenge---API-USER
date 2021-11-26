@@ -4,6 +4,8 @@ import com.testePratico.API_User.model.User;
 import com.testePratico.API_User.repository.UserRepository;
 import com.testePratico.API_User.service.exceptions.ObjectNotFoundExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @CacheEvict(value = "getLastImport", allEntries = true)
     public User save(User user){
         return userRepository.save(user);
     }
@@ -24,6 +27,7 @@ public class UserService {
         return userRepository.getAllUsersPublished(pageable);
     }
 
+    @CacheEvict(value = "checkDatabaseNull", allEntries = true)
     public void deleteAll(){
         userRepository.deleteAll();
     }
@@ -37,7 +41,9 @@ public class UserService {
                 new ObjectNotFoundExceptions("Usuario não encontrado"));
     }
 
+    @Cacheable(value = "checkDatabaseNull")
     public User checkDatabaseNull(){
+        System.out.println("ENTRO");
         Optional<User> optionalUser = userRepository.checkDatabaseNull();
         if(optionalUser.isPresent()){
             return optionalUser.get();

@@ -1,6 +1,7 @@
 package com.testePratico.API_User.repository;
 
 import com.testePratico.API_User.model.User;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @Cacheable(value = "getLastImport")
     @Transactional
     @Query(value = "SELECT MAX(imported_t) FROM users WHERE status = 1", nativeQuery = true)
     public LocalDateTime getLastImport();
