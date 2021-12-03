@@ -9,6 +9,8 @@ import com.testePratico.API_User.requests.repositoryRequest.UserserviceRequest;
 import com.testePratico.API_User.service.UserService;
 import com.testePratico.API_User.util.ConfigImport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +34,8 @@ public class UserServiceRequest {
     private ConfigImport configImport = new ConfigImport();
     private BaseURL baseURL = new BaseURL();
 
+    private static Logger logger = LoggerFactory.getLogger(UserServiceRequest.class);
+
     @Autowired
     UserServiceRequest request;
 
@@ -43,13 +47,17 @@ public class UserServiceRequest {
 
     public void checkNextImport() throws IOException {
 
+        logger.info("Verificando possibilidades de import de dados");
         User user = userService.checkDatabaseNull();
+
         if(user == null){
             request.importUsers();
         }else{
             LocalDateTime nextImport = dateTimeNextImport();
             LocalDateTime dateCurrent = configImport.getLocalDateTimeCurrent();
-            if(nextImport.equals(dateCurrent) || dateCurrent.isAfter(nextImport)) request.importUsers();
+            if(nextImport.equals(dateCurrent) || dateCurrent.isAfter(nextImport)){
+                request.importUsers();
+            } else logger.info("Não foi necessario realizar o import de dados");
         }
     }
 
@@ -61,15 +69,20 @@ public class UserServiceRequest {
     }
 
     public void importUsers() throws IOException {
+        logger.info("Iniciando import de dados");
         UserserviceRequest request = baseURL.baseURL().create(UserserviceRequest.class);
         Call<ResponseRequest> call = request.getUsers();
         Response<ResponseRequest> response = call.execute();
-        ResponseRequest responseRequest = response.body();
-
-        responseRequest.getUserApiList().forEach(userApi -> {
-            userApi.setImported_t(configImport.getLocalDateTimeCurrent());
-            userApi.setStatus(Status.PUBLISHED);
-            userService.save(userApi);
-        });
+        if(response.body().getUserApiList().isEmpty()){
+            logger.info("Falha no import de dados");
+        }else{
+            ResponseRequest responseRequest = response.body();
+            responseRequest.getUserApiList().forEach(userApi -> {
+                userApi.setImported_t(configImport.getLocalDateTimeCurrent());
+                userApi.setStatus(Status.PUBLISHED);
+                userService.save(userApi);
+            });
+            logger.info("Import de dados concluido com sucesso");
+        }
     }
 }

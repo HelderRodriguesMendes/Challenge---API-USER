@@ -43,7 +43,6 @@ public class UserService {
 
     @Cacheable(value = "checkDatabaseNull")
     public User checkDatabaseNull(){
-        System.out.println("ENTRO");
         Optional<User> optionalUser = userRepository.checkDatabaseNull();
         if(optionalUser.isPresent()){
             return optionalUser.get();
