@@ -41,8 +41,7 @@ public class UserServiceRequest {
     @Autowired
     UserService userService;
 
-    public void
-    checkNextImport() throws IOException {
+    public void checkNextImport() throws IOException {
 
         User user = userService.checkDatabaseNull();
         if(user == null){
