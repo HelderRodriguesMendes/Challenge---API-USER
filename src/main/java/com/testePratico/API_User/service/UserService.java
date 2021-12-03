@@ -28,10 +28,6 @@ public class UserService {
     }
 
     @CacheEvict(value = "checkDatabaseNull", allEntries = true)
-    public void deleteAll(){
-        userRepository.deleteAll();
-    }
-
     public void deleteById(Long id){
         userRepository.delete(id);
     }
