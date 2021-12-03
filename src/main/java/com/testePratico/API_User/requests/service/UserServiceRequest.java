@@ -57,7 +57,7 @@ public class UserServiceRequest {
     public LocalDateTime dateTimeNextImport(){
         LocalDateTime lastImport = userRepository.getLastImport();
         LocalDate dateLastImport = lastImport.toLocalDate();
-        LocalTime nextTimeImport = LocalTime.of(11, 35);
+        LocalTime nextTimeImport = LocalTime.of(23, 50);
         return LocalDateTime.of(dateLastImport.plusDays(1), nextTimeImport);
     }
 
